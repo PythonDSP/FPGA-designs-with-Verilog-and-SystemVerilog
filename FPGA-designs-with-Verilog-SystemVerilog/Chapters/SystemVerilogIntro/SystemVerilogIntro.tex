@@ -1,0 +1,136 @@
+\chapter{SystemVerilog for synthesis} \label{ch:SystemVerilogSyn}
+\chapterquote{Mental suffering is worse than physical suffering. Physical suffering sometimes comes as a blessing because it serves the purpose of easing mental suffering by weaning away man’s attention from the mental suffering.}{Meher Baba}
+
+\graphicspath{{Chapters/SystemVerilogIntro/Figures/}}
+\lstinputpath{Codes-Verilog/Chapter-SystemVerilog-for-synthesis} %path is defined in mypreamble
+
+
+
+\section{Verilog, VHDL and SystemVerilog}
+Both Verilog and VHDL languages have their own advantages and disadvantages. Note that, The codes of this tutorial are implemented using VHDL in the other tutorial `FPGA designs with VHDL' which is available on the website. If we compare the Verilog language with the VHDL language, we can observe the following things, 
+
+\begin{enumerate}
+	\item Verilog has a very limited set of keywords; but we can implement all the VHDL designs using Verilog.   
+	\item Verilog codes are smaller as compare to VHDL codes. 
+	\item VHDL is strongly typed language, therefore lots of conversion may require in it, which makes the code more complex. Also, it may take more time to write the VHDL code than Verilog.
+	\item The general purpose `always' block' of Verilog need to used very carefully. It is the designer's responsibility to use it correctly, as Verilog does not provide any option to check the rules. Any misuse of `always' block will result in different `simulation' and `synthesis' results, which is very hard to debug. Whereas the behavior of VHDL is accurate, i.e. there is no ambiguity between the simulation and synthesize hardware results. 
+	\item The user-defined type (enumerated type) can not be defined in Verilog, which is a very handy tool in VHDL for designing the FSM. 
+\end{enumerate}
+
+The SystemVerilog language is the superset of Verilog and contains various features of other programming language i.e. C (structure, and typedef), C++ (class and object) and VHDL (enumerated data type, continue and break statements). Most importantly, it replaces the general purpose `always' block with three different blocks i.e. `always\_ff', `always\_comb' and `always\_latch', which remove the Verilog's ambiguity between simulation and synthesis result. Also, the compiler can catch the error if these new always-blocks are not implemented according to predefined rules. Therefore the SystemVerilog is more powerful language than the VHDL and the Verilog languages. In this chapter, we will reimplement the some of the designs of previous chapters using SystemVerilog to learn and compare the SystemVerilog with Verilog. 
+
+\begin{noNumBox}
+	SystemVerilog is a vast language with several complex features. For example, it has the object oriented programming features (i.e. class and objects), interfaces and structures etc. Similar to other programming languages (e.g. C, C++ and Python), usage of these features requires proper planning and methodology, otherwise these features can harm more than their advantages. 
+	
+	In this tutorial, we have the following aims regarding the use of SystemVerilog to enhance the capabilities of Verilog language, 
+	\begin{enumerate}
+		\item Use of new `always blocks' of SystemVerilog to remove the ambiguities between the simulation and the synthesis results. 
+		\item Use of `enumerated data type' to write more readable and manageable FSM designs. 
+		\item In this tutorial, we will not use the various important SystemVerilog features like packages, interface and structure etc. in the designs, which are related to managing the large designs and require proper planning for implementation. 
+	\end{enumerate} 
+\end{noNumBox}
+
+\section{`logic' data type}
+In previous chapters, we saw that the `reg' data type (i.e. variable type) can not used outside the `always' block, whereas the `wire' data type (i.e. net type) can not be used inside the `always' block. This problem can be resolved by using the new data type provided by the SystemVerilog i.e. `logic'. 
+
+\begin{noNumBox}
+	Please note the following point regarding `logic', 
+	\begin{enumerate}
+		\item `logic' and `reg' can be used interchangeably. 
+		\item Multiple drivers can not be assigned to `logic' data type i.e. values to a variable can not be assigned through two different places. 
+		\item Multiple-driver logic need to be implemented using net type e.g. `wire', `wand' and `wor', which has the capability of resolving the multiple drivers. Since, we did not use the `wire' to drive the multiple-driver logic in this tutorial, therefore `wire' can also be replace by `logic'.
+		\item Listing \ref{verilog:comparator2BitProcedure} is reimplemented in Listing \ref{sv:comparator2BitProcedure}, where both `wire' and `reg' are replaced with `logic' keyword. 
+	\end{enumerate}
+\end{noNumBox}
+
+\lstinputlisting[
+language = Verilog,
+caption    = {Two bit comparator},
+label      = {sv:comparator2BitProcedure}
+]{comparator2BitProcedure.sv}
+
+\section{Specialized `always' blocks}\label{sec:specialAlwaysBlk}
+In Section \ref{sec:combSeqCircuit}, we saw that a sequential design contains two parts i.e. `combination logic' and `sequential logic'. The general purpose `always' block is not intuitive enough to understand the type of logic implemented by it. Also, the synthesis tool has to spend the time to infer the type of logic the design intended to implement. Further, if we forgot to define all the outputs inside all the states of a combination logic, then a latch will be inferred and there is no way to detect this type of errors in Verilog. To remove these problems, three different types of `always' blocks are introduced in SystemVerilog, i.e. `always\_ff', `always\_comb' and `always\_latch', which are discussed below, 
+
+\subsection{`always\_comb'}
+The `always\_comb' block represents that the block should be represented by using `combinational logic'; and there is no need to define the sensitivity list for this block, as it will be done by the software itself. In this way SystemVerilog ensures that all the software tools will infer the same sensitivity list. The example of the block is shown in Listing \ref{sv:always_comb_ex}. 
+
+\lstinputlisting[
+language = Verilog,
+caption    = {`always\_comb' example},
+label      = {sv:always_comb_ex}
+]{always_comb_ex.sv}
+	
+Further, if the design can not be implemented by `pure combinational' logic then the compiler will generate the error as shown in Listing \ref{sv:always_comb_error_ex}. In this listing, we commented the Line 18 and Lines 21-24. In this case, a latch will be inferred (see comments), therefore error will be reported as shown in Lines 8-9. Also, the information about the latch will be displayed by the software as shown in Lines 10-11.  
+	
+\lstinputlisting[
+language = Verilog,
+caption    = {Error for incomplete list of outputs in `always\_comb' block},
+label      = {sv:always_comb_error_ex}
+]{always_comb_error_ex.sv}
+
+
+\subsection{`always\_latch'}
+In Listing \ref{sv:always_comb_error_ex}, we saw that the implementation of the logic need a `latch', therefore we can replace the `always\_comb' with `always\_latch' as done in Line of Listing \ref{sv:always_latch_ex} and the code will work fine. Similar to the `always\_comb', the `always\_latch' does not need the sensitive list. 
+
+
+\lstinputlisting[
+language = Verilog,
+caption    = {`always\_latch' example},
+label      = {sv:always_latch_ex}
+]{always_latch_ex.sv}
+
+Similarly, the Listing \ref{sv:always_comb_ex} was implemented using pure combination logic. If we change the `always\_comb' with `always\_logic' in that listing, then error will be reported as no `latch' is required for this design as shown in Lines 8-9 of Listing \ref{sv:always_latch_error_ex}. 
+
+\lstinputlisting[
+language = Verilog,
+caption    = {Error for latch logic as the design can be implemented using pure combination logic},
+label      = {sv:always_latch_error_ex}
+]{always_latch_error_ex.sv}
+
+\subsection{`always\_ff'}
+The `always\_ff' will result in `sequential logic' as shown in Listing \ref{sv:always_ff_ex}. Also, we need to define the sensitivity list for this block. Further, do not forget to use `posedge' or `negedge' in the sensitive list of the `always\_ff' block, otherwise the `D-FF' will not be inferred. 
+
+\lstinputlisting[
+language = Verilog,
+caption    = {Sequential logic},
+label      = {sv:always_ff_ex}
+]{always_ff_ex.sv}
+
+
+\section{User define types}
+Unlike VHDL, the Verilog does not have the userdefined variables, which is a very handy tool in VHDL. Hence, we need to define states-types and states as `localparam' and `reg' respectively, as shown in Listing \ref{verilog:sequence_detector}. SystemVerilog adds two more functionalities, i.e. `enum' and `typedef', which can be used to define the `\textbf{user-defined (i.e. typedef)} \textbf{enumerated (i.e. enum)} type'. In this section, we will see learn two keywords with an example. 
+
+\subsection{`typedef'}
+The keyword `typedef' is similar to typedef-keyword in C. The `typedef' is used to create the `user-defined datatype, as shown in Listing \ref{verilog:typedefEx}. 
+
+\begin{lstlisting}[language=Verilog, caption={`typedef' example}, label={verilog:typedefEx}]
+	typedef logic [31:0] new_bus; // create a new variable 'new_bus' of size 32
+	new_bus data_bus, address_bus; // two variables of new data type `new_bus'
+\end{lstlisting}
+
+\subsection{`enum'}
+The `enum' is used to define the `abstract variable' which can have a specific set of values, as shown below. Note that if the type is not defined in `enum' then the type will be set as `integer' by default, which may use extra memory unnecessarily. For example in Listing \ref{verilog:numeEx}, the variable `num\_word1' has only 3 possible values, but it size is 32 bit (by default); therefore it is wise to define the type of enum as well, as done for the variable `new\_word2' in the listing. 
+\begin{lstlisting}[language=Verilog, caption={`enum' example}, label={verilog:numeEx}]
+
+// default type is integer i.e. new_word1 will have the size of 32 bit
+enum {one, two, three} num_word1; // variable num_word1 can have only three types of values
+num_word1 = one; // assign one to num_word1
+
+// size of new_word2 is 2-bits
+enum logic [1:0] {seven, eight, nine} new_word2
+new_word2 = seven
+\end{lstlisting}
+
+\subsection{Example} \label{sec:enumTypeDefExample}
+In this tutorial, we will use the user-defined type for creating the states of the FSM. For this we have to use both the keywords together, i.e. `typedef' and `enum' as shown in Listing \ref{sv:enumTypeDefExample}. In this listing, the Listing \ref{verilog:square_wave_ex} is reimplemented using SystemVerilog. The simulation result of the listing is the same as the Fig. \ref{fig:square_wave_ex}. 
+
+\lstinputlisting[
+language = Verilog,
+caption    = {FSM using `typedef' and `enum'},
+label      = {sv:enumTypeDefExample}
+]{enum_typedef_example.sv}
+
+
+\section{Conclusion}
+In this chapter, we discussed of the synthesis-related-features of SystemVerilog which can be used to remove the risk of errors in Verilog. Further, we learn the user-defined types which makes the SystemVerilog codes more readable than the Verilog codes. Also we learn the `logic' datatype which can used in place of `reg' and `wire'. Further, we did not use the various featurs of SystemVerilog like packages, interface and structure etc. in the designs, which are related to managing the large designs.
