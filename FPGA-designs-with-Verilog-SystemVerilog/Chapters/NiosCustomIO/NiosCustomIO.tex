@@ -12,23 +12,23 @@ In previous chapters, only predefined peripherals e.g. JTAG UART and onchip memo
 Follow the below steps to add the custom peripheral in the Nios designs, 
 
 \subsection{Include custom design files (i.e. Verilog/VHDL codes) in the project} 
-First, copy the verilog files (in which designs are defined) inside the main project directory,  i.e. `clockTick.v' and `modMCounter.v' files. The codes in these files are shown in Listing \ref{verilog:clockTick} and \ref{verilog:modMCounter} respectively. \textbf{Note that, these files can be saved in subdirectory inside the project directory as well; but not outside the project directory as codes may not be detected by the Qsys software.}
+First, copy the verilog files (in which designs are defined) inside the main project directory,  i.e. `clockTick.v' and `modMCounter.v' files. The codes in these files are shown in Listing \ref{verilog:clockTick2} and \ref{verilog:modMCounter2} respectively. \textbf{Note that, these files can be saved in subdirectory inside the project directory as well; but not outside the project directory as codes may not be detected by the Qsys software.}
 
 \lstinputlisting[
 caption    = {Clock-tick generator},
 language = Verilog,
-label      = {verilog:clockTick}
+label      = {verilog:clockTick2}
 ]{VerilogCodes/clockTick.v}
 
 \lstinputlisting[
 caption    = {Mod-$m$ counter},
 language = Verilog,
-label      = {verilog:modMCounter}
+label      = {verilog:modMCounter2}
 ]{VerilogCodes/modMCounter.v}
 
 
 \subsection{Add custom components in Qsys}
-Next, we need to create the component in the Qsys design using codes defined in Listing \ref{verilog:clockTick} and \ref{verilog:modMCounter}. Follow the below steps for this purpose, 
+Next, we need to create the component in the Qsys design using codes defined in Listing \ref{verilog:clockTick2} and \ref{verilog:modMCounter2}. Follow the below steps for this purpose, 
 
 \begin{enumerate}
 	\item First, open the Qsys software and click on File$\rightarrow$New Component.
@@ -63,7 +63,7 @@ Next, we need to create the component in the Qsys design using codes defined in 
 		\label{fig:newClockSource4}
 	\end{figure} 
 	
-	\item Note that, two parameters i.e. $M = 5$ and $N = 3$ are defined in Lines 8 and 9 of Listing \ref{verilog:clockTick}. Default values of these parameters can be changed in the `HDL Parameter' tab as shown in Fig. \ref{fig:newClockSource5}. We did not change the default values in this step, as these values can be modified after adding the component in the system as well.
+	\item Note that, two parameters i.e. $M = 5$ and $N = 3$ are defined in Lines 8 and 9 of Listing \ref{verilog:clockTick2}. Default values of these parameters can be changed in the `HDL Parameter' tab as shown in Fig. \ref{fig:newClockSource5}. We did not change the default values in this step, as these values can be modified after adding the component in the system as well.
 	\begin{figure}[!h]
 		\centering
 		\includegraphics[scale=0.65]{newClockSource5}

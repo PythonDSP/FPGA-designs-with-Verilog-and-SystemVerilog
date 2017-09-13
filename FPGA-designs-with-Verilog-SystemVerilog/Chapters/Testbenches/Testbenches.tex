@@ -1,4 +1,4 @@
-\chapter{Testbenches} \label{ch:Testbenches}
+\chapter{Testbenches} \label{ch:Testbenches}\index{testbench}
 \chapterquote{Nothing inside me belongs to me, all is Yours. In returning that which belongs to You, what does it cost to me?}{Kabeer}
 
 \graphicspath{{Chapters/Testbenches/Figures/}}
@@ -6,7 +6,7 @@
 
 \section{Introduction}
 
-In previous chapters, we generated the simulation waveforms using modelsim, by providing the input signal values manually; if the number of input signals are very large and/or we have to perform simulation several times, then this process can be quite complex, time consuming and irritating. Suppose input is of 10 bit, and we want to test all the possible values of input i.e. $2^{10}-1$, then it is impossible to do it manually. In such cases, testbenches are very useful; also, tested design more reliable and prefer by the other clients as well. Further, with the help of testbenches, we can generate results in the form of csv (comma separated file), which can be used by other softwares for further analysis e.g. Python, Excel and Matlab etc.  
+In previous chapters, we generated the simulation waveforms using modelsim, by providing the input signal values manually; if the number of input signals are very large and/or we have to perform simulation several times, then this process can be quite complex, time consuming and irritating. Suppose input is of 10 bit, and we want to test all the possible values of input i.e. $2^{10}-1$, then it is impossible to do it manually. In such cases, testbenches are very useful; also, the tested designs are more reliable and prefer by the clients as well. Further, with the help of testbenches, we can generate results in the form of csv (comma separated file), which can be used by other softwares for further analysis e.g. Python, Excel and Matlab etc.  
 
 \textbf{Since testbenches are used for simulation purpose only (not for synthesis), therefore full range of Verilog constructs can be used e.g. keywords `for', 'display' and `monitor' etc. can be used for writing testbenches.}
 
@@ -14,12 +14,12 @@ In previous chapters, we generated the simulation waveforms using modelsim, by p
 
 Lastly, mixed modeling is not supported by Altera-Modelsim-starter version, i.e. Verilog designs with VHDL and vice-versa can not be compiled in this version of Modelsim. For mixed modeling, we can use Active-HDL software as discussed in Chapter \ref{ch:OverView}.
 
-\section{Testbench for combinational circuits}
+\section{Testbench for combinational circuits}\index{testbench!combinational circuits}
 
 In this section, various testbenches for combinational circuits are shown, whereas testbenches for sequential circuits are discussed in next section. For simplicity of the codes and better understanding, a simple half adder circuit is tested using various simulation methods. 
 
 \subsection{Half adder}
-Listing \ref{verilog:half_adder.v} shows the Verilog code for the half adder which is tested using different ways, 
+Listing \ref{verilog:half_adder.v} shows the Verilog code for the half adder which is tested using different methods, 
 
 \lstinputlisting[
 language = Verilog,
@@ -28,7 +28,7 @@ label      = {verilog:half_adder.v}
 ]{half_adder.v}
 %
 %
-\subsection{Testbench with `initial block'}
+\subsection{Testbench with `initial block'}\index{initial}\index{testbench!initial}
 
 Note that, testbenches are written in separate Verilog files as shown in Listing \ref{verilog:half_adder_tb.v}. Simplest way to write a testbench, is to invoke the `design for testing' in the testbench and provide all the input values inside the `initial block', as explained below, 
 
@@ -38,9 +38,9 @@ Note that, testbenches are written in separate Verilog files as shown in Listing
 	\begin{noNumBox}
 		`Initial block' is used at Line 15, which is executed only once, and terminated when the last line of the block executed i.e. Line 32. Hence, when we press run-all button in Fig. \ref{fig:half_adder_tb}, then simulation terminated after 60 ns (i.e. does not run forever). 
 	\end{noNumBox}
-	In Line 19, value of `b' is 0, then it changes to `1' at Line 23, after a delay of `period' defined at Line 20. The value of period is '20 (Line 11) * timescale (Line 3) = 20 ns'. In this listing all the combinations of inputs are defined manually i.e. 00, 01, 10 and 11; and the results are shown in Fig. \ref{fig:half_adder_tb}, also corresponding outputs i.e. sum and carry are shown in the figure. 
+	In Line 19, value of `b' is 0, then it changes to `1' at Line 23, after a delay of `period' defined at Line 20. The value of period is `20 (Line 11) * timescale (Line 3) = 20 ns'. In this listing all the combinations of inputs are defined manually i.e. 00, 01, 10 and 11; and the results are shown in Fig. \ref{fig:half_adder_tb}, also corresponding outputs i.e. sum and carry are shown in the figure. 
 	
-	\textbf{To generate the waveform, first compile the `half\_adder.v and then `half\_adder\_tb.v' (or compile both the file simultaneously.). Then simulate the half\_adder\_tb.v file. Finally, click on `run all' button (which will run the simulation to maximum time i.e. 60 ns here at Line 22)and then click then `zoom full' button (to fit the waveform on the screen), as shown in Fig. \ref{fig:half_adder_tb}.}
+	\textbf{To generate the waveform, first compile the `half\_adder.v and then `half\_adder\_tb.v' (or compile both the file simultaneously.). Then simulate the half\_adder\_tb.v file. Finally, click on `run all' button (which will run the simulation to maximum time i.e. 80 ns)and then click then `zoom full' button (to fit the waveform on the screen), as shown in Fig. \ref{fig:half_adder_tb}.}
 \end{explanation}
 
 \lstinputlisting[
@@ -57,8 +57,8 @@ label      = {verilog:half_adder_tb.v}
 \end{figure}
 %
 %
-\subsection{Testbench with `always' block} \label{sec:tb_with_process_statement}
-In Listing \ref{verilog:half_adder_procedural_tb}, `always' statement is used in the testbench; which includes the input values along with the corresponding output values.  If the specified outputs are not matched with the output generated by half-adder, then errors will be generated. \textbf{Note that, `always' statements can be written with or without the sensitivity list as shown in Listing \ref{verilog:half_adder_procedural_tb}.}
+\subsection{Testbench with `always' block} \label{sec:tb_with_process_statement}\index{always}\index{testbench!always}
+In Listing \ref{verilog:half_adder_procedural_tb}, `always' statement is used in the testbench; which includes the input values along with the corresponding output values.  If the specified outputs are not matched with the output generated by half-adder, then errors will be displayed. \textbf{Note that in the testbenches, the `always' statement can be written with or without the sensitivity list as shown in Listing \ref{verilog:half_adder_procedural_tb}.}
 \begin{noNumBox}
 	Unlike `initial' block, the `always' block executes forever (if not terminated using `stop' keyword). The statements inside the `always' block execute sequentially; and after the execution of last statement, the execution begins again from the first statement of the `always' block. 
 \end{noNumBox}
@@ -67,6 +67,7 @@ In Listing \ref{verilog:half_adder_procedural_tb}, `always' statement is used in
 	The listing is same as previous Listing \ref{verilog:half_adder_tb.v}, but `always block' is used instead of `initial block', therefore we can provide the sensitive list to the design (Line 28) and gain more control over the testing. A continuous clock is generated in Lines 19-26 by not defining the sensitive list to always-block (Line 19). This clock is used by Line 28. Also, some messages are also displayed if the outcome of the design does not match with the desire outcomes (Lines 35-36). In this way, we can find errors just by reading the terminal (see Fig. \ref{fig:half_adder_process_error_tb}), instead of visualizing the whole waveform, which can be very difficult if the results are too long (see Fig. \ref{fig:half_adder_process_tb}). \textbf{Also, Lines 35-36 can be added in `initial-block' of Listing \ref{verilog:half_adder_tb.v} as well.}
 \end{explanation}
 
+\index{testbench!stop}\index{stop}
 \lstinputlisting[
 language = Verilog,
 caption    = {Testbench with procedural statement},
@@ -90,9 +91,9 @@ label      = {verilog:half_adder_procedural_tb}
 
 
 
-\subsection{Read data from file} \label{sec_read_data_from_file}
+\subsection{Read data from file} \label{sec_read_data_from_file}\index{testbench!read}
 %
-In this section, data from file `read\_file\_ex.txt' is read and displayed in simulation results. Date stored in the file is shown in Fig. \ref{fig:read_file_table_ex}. 
+In this section, data is read from file `read\_file\_ex.txt' and displayed in simulation results. Date stored in the file is shown in Fig. \ref{fig:read_file_table_ex}. 
 
 \begin{figure}[!h]
 	\centering
@@ -119,7 +120,7 @@ label      = {verilog:read_file_ex}
 \end{figure}
 %
 %
-\subsection{Write data to file}
+\subsection{Write data to file}\index{testbench!write}
 
 In this part, different types of values are defined in Listing \ref{verilog:write_file_ex.v} and then stored in the file. 
 
@@ -142,17 +143,17 @@ label      = {verilog:write_file_ex.v}
 	\label{fig:write_file_table_ex}
 \end{figure}
 
-\section{Summary : Save data of simulation}
-In previous sections, we read the lines from one file and then saved those line in other file using `for loop'. Also, we saw use of `initial' and `always' blocks. In this section, we will combine all the techniques together to save the results of Mod-M counter, which is discussed in Listing \ref{verilog:modMCounter}. Testbench for this listing is shown in Listing \ref{verilog:modMCounter_tb} and the waveforms are illustrated in Fig. \ref{fig:monitor_waveform}.
+\section{Testbench for sequential designs}\index{testbench!sequential circuits}\index{testbench!save data to file}
+In previous sections, we read the lines from one file and then saved those line in other file using `for loop'. Also, we saw use of `initial' and `always' blocks. In this section, we will combine all the techniques together to save the results of Mod-M counter, which is an example of `sequential design'. The Mod-m counter is discussed in Listing \ref{verilog:modMCounter}. Testbench for this listing is shown in Listing \ref{verilog:modMCounter_tb} and the waveforms are illustrated in Fig. \ref{fig:monitor_waveform}.
 
 \begin{explanation}[Listing \ref{verilog:modMCounter_tb}]
 	In the testbench following operations are performed, 
 	\begin{enumerate}
-		\item Simulation data is saved on the terminal and saved in a file. Note that, \textbf{`monitor/fmonitor'} keyword can be used in the \textbf{`initial' block}, which can track the changes in the signals as shown in Lines 98-108 and the output is shown in Fig. \ref{fig:monitor_error}. 
+		\item Simulation data is saved on the terminal and saved in a file. Note that, \textbf{`monitor/fmonitor'} keyword\index{testbench!monitor}\index{testbench!fmonitor}\index{monitor}\index{fmonitor} can be used in the \textbf{`initial' block}, which can track the changes in the signals as shown in Lines 98-108 and the output is shown in Fig. \ref{fig:monitor_error}. In the figure we can see that the `error' message is displayed two time (but the error is at one place only), as `monitor' command checks for the transition in the signal as well. 
 		
-		If we want to track only final results, then \textbf{`display/fdisplay'} command can be used inside the \textbf{always block} as shown in Lines 110-124 (Uncomment these lines and comment Lines 98-108). Output is show in Fig. \ref{fig:error_neg_edge_csv}. \textbf{Note that, it is very easy to look for errors in the terminal/csv file as compare to finding it in the waveforms.} 
+		If we want to track only final results, then \textbf{`display/fdisplay'}\index{testbench!display}\index{testbench!fdisplay}\index{display}\index{fdisplay} command can be used inside the \textbf{always block} as shown in Lines 110-124 (Uncomment these lines and comment Lines 98-108). Output is show in Fig. \ref{fig:error_neg_edge_csv}. \textbf{Note that, it is very easy to look for errors in the terminal/csv file as compare to finding it in the waveforms.} 
 		
-		\item Simulation is stopped for a fixed number of clock-cycle using `if statement' at Line 76-84. This method can be extended to stop the simulation after certain condition is reached.
+		\item Simulation is stopped after a fixed number of clock-cycle using `if statement' at Line 76-84. This method can be extended to stop the simulation after certain condition is reached.
 		
 		\begin{noNumBox}
 			Notice the use of `negedge' in the code at Lines 89 and 117, to compare the result saved in file `mod\_m\_counter\_desired.txt' (Fig. \ref{fig:content_mod_m_desire}) with result obtained by `modMCounter.v' (Line 32). For more details, please read the comments in the code. 
@@ -169,15 +170,15 @@ In previous sections, we read the lines from one file and then saved those line 
 	
 	\begin{figure}[!h]
 		\centering
-		\includegraphics[scale=0.9]{monitor_error}
-		\caption{Data displayed by `initial block' with `monitor' command (Lines 98-108)}
+		\includegraphics[scale=0.4]{monitor_error}
+		\caption{Data displayed using `initial block' and `monitor' (Lines 98-108 of Listing \ref{verilog:modMCounter_tb})}
 		\label{fig:monitor_error}
 	\end{figure}
 	
 	\begin{figure}[!h]
 		\centering
 		\includegraphics[scale=0.8]{error_neg_edge_csv}
-		\caption{Data saved in .csv file by `always block' with `fdisplay' command (Lines 110-124)}
+		\caption{Data saved in .csv file using `always block' and `fdisplay' (Lines 110-124 of Listing \ref{verilog:modMCounter_tb})}
 		\label{fig:error_neg_edge_csv}
 	\end{figure}
 	
@@ -198,4 +199,4 @@ label      = {verilog:modMCounter_tb}
 
 
 \section{Conclusion}
-In this chapter, we learn to write testbenches with different styles for combinational circuits. We saw the methods by which inputs can be read from the file and the outputs can be written in the file. Simulation results and expected results are compared and saved in the csv file and displayed as simulation waveforms; which demonstrated that locating the errors in csv files is easier than the simulation waveforms. Further, we saw the simulation of sequential circuits as well, which is slightly different from combination circuits; but all the methods of combinational circuit simulations can be applied to sequential circuits as well. 
+In this chapter, we learn to write testbenches with different styles for combinational circuits and sequential circuits. We saw the methods by which inputs can be read from the file and the outputs can be written in the file. Simulation results and expected results are compared and saved in the csv file and displayed as simulation waveforms; which demonstrated that locating the errors in csv files is easier than the simulation waveforms.
