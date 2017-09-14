@@ -1,4 +1,4 @@
-\chapter{SystemVerilog for synthesis} \label{ch:SystemVerilogSyn}
+\chapter{SystemVerilog for synthesis} \label{ch:SystemVerilogSyn}\index{systemverilog}
 \chapterquote{Mental suffering is worse than physical suffering. Physical suffering sometimes comes as a blessing because it serves the purpose of easing mental suffering by weaning away man’s attention from the mental suffering.}{Meher Baba}
 
 \graphicspath{{Chapters/SystemVerilogIntro/Figures/}}
@@ -30,7 +30,7 @@ The SystemVerilog language is the superset of Verilog and contains various featu
 	\end{enumerate} 
 \end{noNumBox}
 
-\section{`logic' data type}
+\section{`logic' data type}\index{logic}
 In previous chapters, we saw that the `reg' data type (i.e. variable type) can not used outside the `always' block, whereas the `wire' data type (i.e. net type) can not be used inside the `always' block. This problem can be resolved by using the new data type provided by the SystemVerilog i.e. `logic'. 
 
 \begin{noNumBox}
@@ -52,7 +52,7 @@ label      = {sv:comparator2BitProcedure}
 \section{Specialized `always' blocks}\label{sec:specialAlwaysBlk}
 In Section \ref{sec:combSeqCircuit}, we saw that a sequential design contains two parts i.e. `combination logic' and `sequential logic'. The general purpose `always' block is not intuitive enough to understand the type of logic implemented by it. Also, the synthesis tool has to spend the time to infer the type of logic the design intended to implement. Further, if we forgot to define all the outputs inside all the states of a combination logic, then a latch will be inferred and there is no way to detect this type of errors in Verilog. To remove these problems, three different types of `always' blocks are introduced in SystemVerilog, i.e. `always\_ff', `always\_comb' and `always\_latch', which are discussed below, 
 
-\subsection{`always\_comb'}
+\subsection{`always\_comb'}\index{always\_comb}
 The `always\_comb' block represents that the block should be implemented by using `combinational logic'; and there is no need to define the sensitivity list for this block, as it will be done by the software itself. In this way SystemVerilog ensures that all the software tools will infer the same sensitivity list. The example of the `always\_comb' block is shown in Listing \ref{sv:always_comb_ex}. 
 
 \lstinputlisting[
@@ -70,7 +70,7 @@ label      = {sv:always_comb_error_ex}
 ]{always_comb_error_ex.sv}
 
 
-\subsection{`always\_latch'}
+\subsection{`always\_latch'}\index{always\_latch}
 In Listing \ref{sv:always_comb_error_ex}, we saw that the implementation of the logic need a `latch', therefore we can replace the `always\_comb' with `always\_latch' as done in Line of Listing \ref{sv:always_latch_ex} and the code will work fine. Similar to the `always\_comb', the `always\_latch' does not need the sensitive list. 
 
 
@@ -88,7 +88,7 @@ caption    = {Error for latch logic as the design can be implemented using pure 
 label      = {sv:always_latch_error_ex}
 ]{always_latch_error_ex.sv}
 
-\subsection{`always\_ff'}
+\subsection{`always\_ff'}\index{always\_ff}
 The `always\_ff' will result in `sequential logic' as shown in Listing \ref{sv:always_ff_ex}. Also, we need to define the sensitivity list for this block. Further, do not forget to use `posedge' or `negedge' in the sensitive list of the `always\_ff' block, otherwise the `D-FF' will not be inferred. 
 
 \lstinputlisting[
@@ -98,10 +98,10 @@ label      = {sv:always_ff_ex}
 ]{always_ff_ex.sv}
 
 
-\section{User define types}
+\section{User define types} \index{user-defined type}
 Unlike VHDL, the Verilog does not have the userdefined variables, which is a very handy tool in VHDL. Hence, we need to define states-types and states as `localparam' and `reg' respectively, as shown in Listing \ref{verilog:sequence_detector}. SystemVerilog adds two more functionalities, i.e. `enum' and `typedef', which can be used to define the `\textbf{user-defined (i.e. typedef)} \textbf{enumerated (i.e. enum)} type'. In this section, we will learn these two keywords with an example. 
 
-\subsection{`typedef'}
+\subsection{`typedef'} \index{typedef}
 The keyword `typedef' is similar to typedef-keyword in C. The `typedef' is used to create the `user-defined datatype', as shown in Listing \ref{verilog:typedefEx}. 
 
 \begin{lstlisting}[language=Verilog, caption={`typedef' example}, label={verilog:typedefEx}]
@@ -109,7 +109,7 @@ The keyword `typedef' is similar to typedef-keyword in C. The `typedef' is used 
 	new_bus data_bus, address_bus; // two variables of new data type `new_bus'
 \end{lstlisting}
 
-\subsection{`enum'}
+\subsection{`enum'}\index{enumerated type}\index{enum}
 The `enum' is used to define the `abstract variable' which can have a specific set of values, as shown below. Note that if the type is not defined in `enum' then the type will be set as `integer' by default, which may use extra memory unnecessarily. For example in Listing \ref{verilog:numeEx}, the variable `num\_word1' has only 3 possible values, but it size is 32 bit (by default); therefore it is wise to define the type of enum as well, as done for the variable `new\_word2' in the listing. 
 \begin{lstlisting}[language=Verilog, caption={`enum' example}, label={verilog:numeEx}]
 
