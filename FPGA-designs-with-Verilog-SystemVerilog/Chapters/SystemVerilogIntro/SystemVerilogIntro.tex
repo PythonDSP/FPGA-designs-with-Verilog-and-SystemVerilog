@@ -7,17 +7,17 @@
 
 
 \section{Verilog, VHDL and SystemVerilog}
-Both Verilog and VHDL languages have their own advantages and disadvantages. Note that, The codes of this tutorial are implemented using VHDL in the other tutorial `FPGA designs with VHDL' which is available on the website. If we compare the Verilog language with the VHDL language, we can observe the following things, 
+Both Verilog and VHDL languages have their own advantages. Note that, The codes of this tutorial are implemented using VHDL in the other tutorial `FPGA designs with VHDL' which is available on the \href{http://pythondsp.readthedocs.io/en/latest/pythondsp/toc.html}{website}. If we compare the Verilog language with the VHDL language, we can observe the following things, 
 
 \begin{enumerate}
 	\item Verilog has a very limited set of keywords; but we can implement all the VHDL designs using Verilog.   
 	\item Verilog codes are smaller as compare to VHDL codes. 
-	\item VHDL is strongly typed language, therefore lots of conversion may require in it, which makes the code more complex. Also, it may take more time to write the VHDL code than Verilog.
-	\item The general purpose `always' block' of Verilog need to used very carefully. It is the designer's responsibility to use it correctly, as Verilog does not provide any option to check the rules. Any misuse of `always' block will result in different `simulation' and `synthesis' results, which is very hard to debug. Whereas the behavior of VHDL is accurate, i.e. there is no ambiguity between the simulation and synthesize hardware results. 
+	\item VHDL is strongly typed language, therefore lots of conversions may require in it, which make the codes more complex than the Verilog codes. Also due to this reason, it may take more time to write the VHDL codes than the Verilog codes.
+	\item The general purpose `always' block' of Verilog needs to be used very carefully. It is the designer's responsibility to use it correctly, as Verilog does not provide any option to check the rules. Any misuse of `always' block will result in different `simulation' and `synthesis' results, which is very hard to debug. Whereas the behavior of VHDL is accurate, i.e. there is no ambiguity between the simulation and synthesize results. 
 	\item The user-defined type (enumerated type) can not be defined in Verilog, which is a very handy tool in VHDL for designing the FSM. 
 \end{enumerate}
 
-The SystemVerilog language is the superset of Verilog and contains various features of other programming language i.e. C (structure, and typedef), C++ (class and object) and VHDL (enumerated data type, continue and break statements). Most importantly, it replaces the general purpose `always' block with three different blocks i.e. `always\_ff', `always\_comb' and `always\_latch', which remove the Verilog's ambiguity between simulation and synthesis result. Also, the compiler can catch the error if these new always-blocks are not implemented according to predefined rules. Therefore the SystemVerilog is more powerful language than the VHDL and the Verilog languages. In this chapter, we will reimplement the some of the designs of previous chapters using SystemVerilog to learn and compare the SystemVerilog with Verilog. 
+The SystemVerilog language is the superset of Verilog and contains various features of other programming language i.e. C (structure, and typedef), C++ (class and object) and VHDL (enumerated data type, continue and break statements). Most importantly, it replaces the general purpose `always' block with three different blocks i.e. `always\_ff', `always\_comb' and `always\_latch', which remove the Verilog's ambiguity between simulation and synthesis results. Also, the compiler can catch the error if these new always-blocks are not implemented according to predefined rules. In this chapter, we will reimplement the some of the designs of previous chapters using SystemVerilog to learn and compare the SystemVerilog with Verilog. 
 
 \begin{noNumBox}
 	SystemVerilog is a vast language with several complex features. For example, it has the object oriented programming features (i.e. class and objects), interfaces and structures etc. Similar to other programming languages (e.g. C, C++ and Python), usage of these features requires proper planning and methodology, otherwise these features can harm more than their advantages. 
@@ -53,7 +53,7 @@ label      = {sv:comparator2BitProcedure}
 In Section \ref{sec:combSeqCircuit}, we saw that a sequential design contains two parts i.e. `combination logic' and `sequential logic'. The general purpose `always' block is not intuitive enough to understand the type of logic implemented by it. Also, the synthesis tool has to spend the time to infer the type of logic the design intended to implement. Further, if we forgot to define all the outputs inside all the states of a combination logic, then a latch will be inferred and there is no way to detect this type of errors in Verilog. To remove these problems, three different types of `always' blocks are introduced in SystemVerilog, i.e. `always\_ff', `always\_comb' and `always\_latch', which are discussed below, 
 
 \subsection{`always\_comb'}
-The `always\_comb' block represents that the block should be represented by using `combinational logic'; and there is no need to define the sensitivity list for this block, as it will be done by the software itself. In this way SystemVerilog ensures that all the software tools will infer the same sensitivity list. The example of the block is shown in Listing \ref{sv:always_comb_ex}. 
+The `always\_comb' block represents that the block should be implemented by using `combinational logic'; and there is no need to define the sensitivity list for this block, as it will be done by the software itself. In this way SystemVerilog ensures that all the software tools will infer the same sensitivity list. The example of the `always\_comb' block is shown in Listing \ref{sv:always_comb_ex}. 
 
 \lstinputlisting[
 language = Verilog,
@@ -61,7 +61,7 @@ caption    = {`always\_comb' example},
 label      = {sv:always_comb_ex}
 ]{always_comb_ex.sv}
 	
-Further, if the design can not be implemented by `pure combinational' logic then the compiler will generate the error as shown in Listing \ref{sv:always_comb_error_ex}. In this listing, we commented the Line 18 and Lines 21-24. In this case, a latch will be inferred (see comments), therefore error will be reported as shown in Lines 8-9. Also, the information about the latch will be displayed by the software as shown in Lines 10-11.  
+Further, if the design can not be implemented by `pure combinational' logic, then the compiler will generate the error as shown in Listing \ref{sv:always_comb_error_ex}. In this listing, we commented the Line 18 and Lines 21-24. In this case, a latch will be inferred (see comments), therefore error will be reported as shown in Lines 8-9. Also, the information about the latch will be displayed by the software as shown in Lines 10-11.  
 	
 \lstinputlisting[
 language = Verilog,
@@ -99,10 +99,10 @@ label      = {sv:always_ff_ex}
 
 
 \section{User define types}
-Unlike VHDL, the Verilog does not have the userdefined variables, which is a very handy tool in VHDL. Hence, we need to define states-types and states as `localparam' and `reg' respectively, as shown in Listing \ref{verilog:sequence_detector}. SystemVerilog adds two more functionalities, i.e. `enum' and `typedef', which can be used to define the `\textbf{user-defined (i.e. typedef)} \textbf{enumerated (i.e. enum)} type'. In this section, we will see learn two keywords with an example. 
+Unlike VHDL, the Verilog does not have the userdefined variables, which is a very handy tool in VHDL. Hence, we need to define states-types and states as `localparam' and `reg' respectively, as shown in Listing \ref{verilog:sequence_detector}. SystemVerilog adds two more functionalities, i.e. `enum' and `typedef', which can be used to define the `\textbf{user-defined (i.e. typedef)} \textbf{enumerated (i.e. enum)} type'. In this section, we will learn these two keywords with an example. 
 
 \subsection{`typedef'}
-The keyword `typedef' is similar to typedef-keyword in C. The `typedef' is used to create the `user-defined datatype, as shown in Listing \ref{verilog:typedefEx}. 
+The keyword `typedef' is similar to typedef-keyword in C. The `typedef' is used to create the `user-defined datatype', as shown in Listing \ref{verilog:typedefEx}. 
 
 \begin{lstlisting}[language=Verilog, caption={`typedef' example}, label={verilog:typedefEx}]
 	typedef logic [31:0] new_bus; // create a new variable 'new_bus' of size 32
@@ -123,7 +123,7 @@ new_word2 = seven
 \end{lstlisting}
 
 \subsection{Example} \label{sec:enumTypeDefExample}
-In this tutorial, we will use the user-defined type for creating the states of the FSM. For this we have to use both the keywords together, i.e. `typedef' and `enum' as shown in Listing \ref{sv:enumTypeDefExample}. In this listing, the Listing \ref{verilog:square_wave_ex} is reimplemented using SystemVerilog. The simulation result of the listing is the same as the Fig. \ref{fig:square_wave_ex}. 
+In this tutorial, we will use the user-defined type for creating the states of the FSM. For this, we have to use both the keywords together, i.e. `typedef' and `enum' as shown in Listing \ref{sv:enumTypeDefExample}. In this listing, the Listing \ref{verilog:square_wave_ex} is reimplemented using SystemVerilog. The simulation result of the listing is the same as the Fig. \ref{fig:square_wave_ex}. 
 
 \lstinputlisting[
 language = Verilog,
@@ -133,4 +133,4 @@ label      = {sv:enumTypeDefExample}
 
 
 \section{Conclusion}
-In this chapter, we discussed of the synthesis-related-features of SystemVerilog which can be used to remove the risk of errors in Verilog. Further, we learn the user-defined types which makes the SystemVerilog codes more readable than the Verilog codes. Also we learn the `logic' datatype which can used in place of `reg' and `wire'. Further, we did not use the various featurs of SystemVerilog like packages, interface and structure etc. in the designs, which are related to managing the large designs.
+In this chapter, we discussed of the synthesis-related-features of SystemVerilog which can be used to remove the risk of errors in Verilog. Further, we learn the user-defined types which makes the SystemVerilog codes more readable than the Verilog codes. Also, we learn the `logic' datatype which can used in place of `reg' and `wire'. Further, we did not use the various features of SystemVerilog like packages, interface and structure etc. in the designs, which are related to managing the large designs.
