@@ -89,7 +89,7 @@ module mealy_recursive_template is
 		...
 		case (state_reg)
 			s0 : begin
-				if (<condition> & r1_reg = <value> & t >= T1-1) begin // if (input1 = 2'b01) then
+				if (<condition> & r1_reg == <value> & t >= T1-1) begin // if (input1 = 2'b01) then
 					output1 = <value>;
 					output2 = <value>;
 					...
@@ -98,7 +98,7 @@ module mealy_recursive_template is
 					...
 					state_next = s1; 
 				end
-				else if (<condition> & r2_reg = <value> & t >= T2-1) begin // add all the required coditions
+				else if (<condition> & r2_reg == <value> & t >= T2-1) begin // add all the required coditions
 					output1 = <value>;
 					output2 = <value>;
 					...

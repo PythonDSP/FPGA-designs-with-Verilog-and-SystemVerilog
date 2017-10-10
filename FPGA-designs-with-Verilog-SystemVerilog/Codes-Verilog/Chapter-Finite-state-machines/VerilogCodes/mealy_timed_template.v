@@ -28,9 +28,9 @@ module mealy_timed_template
     reg [<size>] t; //<size> should be able to store max(T1, T2, T3) 
 
     // state register : state_reg
-    // This process contains sequential part and all the D-FF are 
-    // included in this process. Hence, only 'clk' and 'reset' are 
-    // required for this process. 
+    // This always-block contains sequential part and all the D-FF are 
+    // included in this always-block. Hence, only 'clk' and 'reset' are 
+    // required for this always-block. 
     always @(posedge clk, posedge reset) begin
         if (reset) begin
             state_reg = s1;
@@ -41,7 +41,7 @@ module mealy_timed_template
     end 
 
     // timer 
-    always @(clk, reset) begin 
+    always @(posedge clk, posedge reset) begin 
         if (reset) begin
             t = 0;
         end

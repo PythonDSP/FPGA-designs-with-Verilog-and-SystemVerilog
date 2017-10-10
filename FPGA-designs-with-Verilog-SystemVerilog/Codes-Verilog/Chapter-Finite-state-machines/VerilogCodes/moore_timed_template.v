@@ -41,7 +41,7 @@ module moore_timed_template
 	end 
 	
 	// timer 
-	always @(clk, reset) begin 
+	always @(posedge clk, posedge reset) begin 
 		if (reset) begin
 			t = 0;
 		end

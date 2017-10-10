@@ -33,9 +33,9 @@ module moore_recursive_template
 
 
 	// state register : state_reg
-	// This process contains sequential part & all the D-FF are 
-	// included in this process. Hence, only 'clk' and 'reset' are 
-	// required for this process. 
+	// This always-block contains sequential part & all the D-FF are 
+	// included in this always-block. Hence, only 'clk' and 'reset' are 
+	// required for this always-block. 
 	always(posedge clk, posedge reset)
 	begin
 		if (reset) begin
@@ -76,33 +76,35 @@ module moore_recursive_template
 
 
 	
-	-- next state logic : state_next
-	-- This is combinational of the sequential design, 
-	-- which contains the logic for next-state
-	-- include all signals and input in sensitive-list except state_next
-	process(input1, input2, state_reg) 
-	begin 
-		state_next <= state_reg; -- default state_next
-		r1_next <= r1_reg; -- default next-states
-		r2_next <= r2_reg;
+	//  next state logic : state_next
+	//  This is combinational of the sequential design, 
+	//  which contains the logic for next-state
+	//  include all signals and input in sensitive-list except state_next
+	always @(input1, input2, state_reg) begin 
+		state_next = state_reg; //  default state_next
+		r1_next = r1_reg; //  default next-states
+		r2_next = r2_reg;
 		...
-		case state_reg is
-			when s0 =>
-				if <condition> and r1_reg = <value> and t >= T1-1 then -- if (input1 = '01') then
-					state_next <= s1; 
-					r1_next <= <value>;
-					r2_next <= <value>;
+		case (state_reg) 
+			s0 : begin
+				if <condition> & r1_reg == <value> & t >= T1-1 begin //  if (input1 = '01') then
+					state_next = s1; 
+					r1_next = <value>;
+					r2_next = <value>;
 					...
-				elsif <condition> and r2_reg = <value> and t >= T2-1 then  -- add all the required conditions
-					state_next <= <value>; 
-					r1_next <= <value>;
+				end
+				elsif <condition> & r2_reg == <value> & t >= T2-1 begin  //  add all the required conditions
+					state_next = <value>; 
+					r1_next = <value>;
 					...
-				else -- remain in current state
-					state_next <= s0; 
-					r2_next <= <value>;
+				end
+				else begin //  remain in current state
+					state_next = s0; 
+					r2_next = <value>;
 					...
-				end if;
-			when s1 => 
+				end
+			end
+			s1 : begin 
 				...
 		end case;
 	end process; 
