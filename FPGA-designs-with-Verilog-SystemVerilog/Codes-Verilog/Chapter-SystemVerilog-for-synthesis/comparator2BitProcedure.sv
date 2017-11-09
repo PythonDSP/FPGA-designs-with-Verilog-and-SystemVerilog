@@ -8,11 +8,11 @@ module comparator2BitProcedure
 );
  
 always @(a,b) begin
-	if (a[0]==b[0] && a[1]==b[1]) 
-		eq = 1;
-	else
-		eq = 0;
+    if (a[0]==b[0] && a[1]==b[1]) 
+        eq = 1;
+    else
+        eq = 0;
 end
 
 endmodule
-	
+    
