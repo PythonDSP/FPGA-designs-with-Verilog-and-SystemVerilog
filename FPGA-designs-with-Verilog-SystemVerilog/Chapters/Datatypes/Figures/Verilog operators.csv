@@ -1,0 +1,30 @@
+Type,Symbol,Description,Note
+Arithmetic,+,add,
+,-,subtract,
+,*,multiply,
+,/,divide,may not synthesize
+,%,modulus (remainder),may not synthesize
+,**,power,may not synthesize
+Bitwise,~,not,
+,|,or,
+,&,and,
+,^,xor,
+,~& or &~,nand,mix two operators
+Relational,>,greater than,
+,<,less than,
+,>=,greater than or equal,
+,<=,less than or equal,
+, ==,equal,
+, !=,not equal,
+Logical,!,negation,
+,||,logical OR,
+,&&,logical AND,
+Shift operator,>>,right shift,
+,<<,left shift,
+,>>>,right shift with MSB shifted to right,
+,<<<,same as <<,
+Concatenation,{ },Concatenation,
+,{ { }  },Replication,"e.g. { 2{3} } = {3, 3}"
+Conditional,? :,conditional,e.g. (2>3) ? 1 : 0
+Sign-format,$unsigned(),signed to unsigned conversion,$unsigned(-3)
+,$signed(),unsigned to signed conversion,$signed(3)
